@@ -14,7 +14,6 @@ En este documento se va a realizar un tutorial sobre Selenium Webdriver para un 
 * **4. Recomendaciones y consejos**
 * **5. TestNG**
 * **6. JUnit4**
-* **7. JUnit4 vs TestNG**
 
 ##INTRODUCCION
 
