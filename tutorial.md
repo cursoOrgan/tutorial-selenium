@@ -12,8 +12,8 @@ En este documento se va a realizar un tutorial sobre Selenium Webdriver para un 
 * **3.3 Metodos utilizados sobre elementos de la web**
 * **3.4 Asserts**
 * **4. Recomendaciones y consejos**
-* **5. JUnit4**
-* **6. TestNG**
+* **5. TestNG**
+* **6. JUnit4**
 * **7. JUnit4 vs TestNG**
 
 ##INTRODUCCION
@@ -220,6 +220,154 @@ Este método se utiliza con una condición booleana, de modo que si la condició
 * **assertFalse**
 
 Este método hace lo contrario al anterior, de modo que el assert es correcto cuando la condición es false y da error cuando la condición es true.
+
+##RECOMENDACIONES Y CONSEJOS
+
+Ahora veremos algunas recomendaciones a llevar a cabo para el correcto uso de Selenium.
+
+* Para la comprobación de que un dato ha aparecido correctamente tras hacer una búsqueda o tras aplicar unos filtros, si aparece una lista de elementos que queremos recorrer para comprobar si ha aparecido bien, deberemos utilizar un bucle que los recorra. Por ejemplo tenemos una aplicación que nos muestra una lista de elementos, que podemos filtrar según varios tipos de opciones. Cuando filtremos, queremos comprobar que los resultados obtenidos son correctos y están bien filtrados. Entonces deberemos realizar un bucle que recorra todos los elementos, cambiando el valor “i” del bucle en la sintaxis de modo que esa i permita que en cada iteración del bucle pase al siguiente elemento pero compruebe el mismo campo en todos ellos. 
+
+
+* Si queremos comparar dos textos para ver si su valor es el mismo con algún assert, se recomienda que en el método cuando se implemente, ambos strings se pongan primero ambos a minúsculas o mayúsculas, ya que el programa es sensible a mayúsculas y minúsculas y cualquier diferencia de eso en un carácter hace que la comparación sea diferente aunque el texto sea el mismo.
+
+* A veces necesitaremos pasar un campo numérico que queramos comparar que aparece en la web. Este dato aparecerá como tipo string cuando lo obtengamos con el método findElement. Posteriormente podemos convertirlo a entero con el método parseInt (String) de la clase Integer. Por ejemplo:
+
+*String numeroString = “24”;*
+*int numeroEntero = Integer.parseInt(numeroString);*
+
+Tener en cuenta que a veces si introducimos algún texto y esperamos que ese texto no aparezca por cualquier motivo es un assert correcto, no sería incorrecto.
+
+##TestNG
+
+**TestNG es un framework para pruebas y testing** que trabaja con Java y está basado en JUnit (para Java) y NUnit (para .NET), pero introduciendo nuevas funcionalidades que los hacen más poderosos y fáciles de usar. TestNG está diseñado para cubrir todas las categorías de las pruebas: unitarias, funcionales, end-to-end, integración, etc.
+
+Lo primero para trabajar con TestNG en NetBeans es descargar la [librería](http://testng.org/doc/download.html).
+
+Una vez descargamos el archivo comprimido, lo descomprimimos y movemos la carpeta a la raíz donde nos interese a nosotros tenerla.
+
+Para utilizar TestNG, tan sólo debemos añadir dicha librería en el proyecto que se haya creado para realizar nuestros tests. Una vez añadida, ya estamos listos para comenzar con las pruebas.
+
+En NetBeans tenemos dos posibles ficheros para crear archivos TestNG:
+
+* **TestNG Test Case** es la clase java donde diseñaremos nuestro test. Es como su propio nombre indica, un caso test.
+* **TestNG Test Suite** es un archivo xml donde podemos gestionar la ejecución de múltiples Test Case en caso de tener más de un archivo.
+
+###Test Case
+
+Cuando creamos un archivo Test Case, se crea una estructura por defecto.
+
+Las “etiquetas” que se ven encima de ciertos métodos que se generan por defecto, que van acompañadas con un carácter @, se conocen como **annotations (anotaciones)**. Existen muchos tipos de anotaciones en TestNG. Vamos a ver cada uno de los tipos a continuación:
+
+* @BeforeSuite: el método con esa anotación se ejecutará antes que todos los test contenidos en el Test Suite.
+* @AfterSuite: este método se ejecutará después de ejecutar los test contenidos en el Test Suite.
+* @BeforeGroups: Este método se ejecutará antes del primer test que pertenezca a un determinado grupo de test invocados.
+* @AfterGroups: este método se ejecutará después del último método que pertenezca a un grupo de test determinados.
+* @BeforeClass: el método con dicha anotación se ejecutará antes del primer método de la clase invocada.
+* @AfterClass: igual que el método anterior, pero en lugar de ejecutarse antes, éste método se ejecutará después de haber ejecutado todos los tests de esa clase.
+* @BeforeMethod: este método será ejecutado antes de ejecutar cualquier método test.
+* @AfterMethod: este método será ejecutado después de ejecutar cualquier método test.
+* @Test: esta anotación se incluye en la cabecera de cada uno de los método que vamos a pasar como test. En un archivo Test Case puede haber tantos tests como veamos conveniente. Cualquier método de nuestra clase que queramos que sea comprobado como test, debe llevar esta etiqueta en la cabecera. En caso de no tenerla el resultado de ejecutarla no aparecerá como resultado de nuestros tests.
+
+Una vez que tenemos definido una prueba, hay que ejecutarla. Para ejecutar un test se realizará de la siguiente manera:
+
+Vamos a nuestro archivo Test Case en la lista de archivos del proyecto. Hacemos click con el botón derecho → “Test File”. Con esto, el test comenzará a ejecutarse automáticamente y al terminar nos aparecerá el resultado del test.
+
+Si tenemos más de un test method para ejecutar se ejecutarán todos ellos uno a uno. Si alguno de ellos “falla”, la ejecución terminará y se devolverán los resultados oportunos de los test positivos, negativos y los que no se han podido ejecutar porque se ha detenido la prueba.
+
+###Test Suite
+
+Un **Test Suite** es una colección de Test Case. Está representado por un archivo XML que representa las características de ejecución. Es muy flexible a la hora de configurar los tests a ejecutar. Un test suite puede contener uno o más test y estará definido por la etiqueta <suite>. <suite> está formado a su vez de etiquetas **<test>**.
+
+La etiqueta **<suite>** acepta los siguientes atributos:
+
+* name: es el único atributo obligatorio.
+* verbose
+* parallel
+* thread-count
+* annotations
+* time-out
+
+Ejecutando el Test Suite el resultado será lo mismo que ejecutando uno a uno nuestros Test Case, pero ejecutará todos ellos uno tras uno.
+
+###Grupos de test
+
+TestNG tiene una funcionalidad muy útil que sus competidores (JUnit por ejemplo) no tienen. Dicha funcionalidad es la creación de **grupos de test**. No sólo se pueden definir grupos de test, sino que además, se pueden hacer grupos de grupos. Posteriormente a la hora de ejecutar, podemos ejecutar un grupo u otro, excluyendo a los que veamos necesarios por el momento. Hacer grupos de test provee de gran flexibilidad sobre la organización de nuestros tests y no requiere recompilar el código si queremos ejecutar dos conjuntos de tests diferentes.
+
+
+Para definir un test como perteneciente a un grupo de test basta con incluir en la anotación @Test un atributo: (groups = { “nombreGrupo” }) ó (groups = {“nombreGrupo1”,”nombreGrupo2”}) en caso de querer definirlo en más de un grupo.
+
+Posteriormente para definir qué grupo queremos ejecutar basta con definirlos en el Test Suite.
+
+###Dependencia de test.
+
+TestNG nos permite la ejecución de test “dependiendo” de ciertos resultados de test anteriores. Es decir, si Test2 depende de Test1, Test2 únicamente se ejecutará si Test1 ha sido exitoso. En caso contrario, Test2 no se ejecutará.
+
+**Para mayor información sobre la herramienta TestNG en el siguiente enlace hay un tutorial muy bueno sobre todo lo relacionado con ello y numerosos ejemplos, además de otras funcionalidades que no se han explicado en este documento ya que no han sido necesarias aún, y que podemos encontrar también:**
+
+[Enlace](http://www.tutorialspoint.com/testng/index.html) 
+
+##JUnit4
+
+Al igual que TestNG, JUnit es un framework de testing para Java. Este framework nos provee ciertas facilidades:
+
+* Clases base con anotaciones (annotations) para escribir casos de test.
+* Clase base para ejecutar los test, llamada TestRunner.
+* Resultados de los tests ejecutados.
+
+Lo primero que debemos realizar es la instalación de la librería JUnit en nuestro proyecto. Es posible que en todas las librerías que se descargaron para que funcione Selenium WebDriver ya se encuentren disponibles en ellas. Si no es así, en el siguiente [enlace](https://github.com/junit-team/junit/wiki/Download-and-Install) podemos encontrar las librerías necesarias para utilizar JUnit. 
+
+Una vez tenemos las librerías descargadas, lo único que debemos hacer es crear nuestro proyecto y añadirlas.
+
+Al igual que en TestNG, en JUnit, podemos crear igualmente dos tipos de archivos:
+
+* JUnit Test es una clase java donde diseñaremos nuestros test individualmente. 
+* Test Suite es una clase donde gestionamos, en caso de tener más de un JUnit Test, todos ellos.
+
+###JUnit Test
+
+Cuando creamos un archivo JUnit Test, se nos crea una estructura por defecto.
+
+Al igual que en TestNG, **JUnit tiene anotaciones**, como puede verse encima de la definición de los métodos por defecto que se crean. Como ya se sabe, las anotaciones ayudan al framework JUnit a identificar rápidamente los métodos que tiene que ejecutar y cuándo los tiene que ejecutar.
+
+A continuación vamos a ver las distintas anotaciones que tenemos disponibles en JUnit:
+
+* **@Test:** identifica a un método como un “test method”.
+
+* **@Before:** el método que vaya identificado con esta anotación, será ejecutado antes de cada test method. Se suele utilizar para preparar el ambiente de test, como inicializar la clase, leer datos de entrada, etc.
+
+* **@After:** este método será ejecutado después de cada test method. Se suele utilizar para limpiar el ambiente de test, como puede ser eliminar datos temporales, reiniciar valores, etc.
+
+* **@BeforeClass:** este método es ejecutado una única vez, antes del inicio de todos los test. El método que va definido con ésta anotación, deberá definirse como estático para poder trabajar en JUnit.
+
+* **@AfterClass:** al contrario que el método anterior, este método es ejecutado una única vez al finalizar la ejecución de los tests. Igualmente, se debe definir como estático para que funcione correctamente.
+
+* **@Ignore:** se ignora el test method. Es muy útil cuando por ejemplo se cambia algo de código de la aplicación y el test aún no se ha adaptado a los nuevos cambios.
+
+Una vez hemos definido nuestro JUnit Test para ejecutarlo será de la misma manera que vimos en TestNG. Vamos a nuestro archivo y haciendo click con el botón derecho → Test File. Igualmente se ejecutarán los tests que hayamos anotado como @Test y nos devolverá el resultado. Del mismo modo, si alguno de nuestros test falla, la ejecución se detendrá, indicándonos el error, los tests que no se han ejecutado y los que se han ejecutado correctamente.
+
+###Test Runner
+
+Si tenemos varios tests por ejecutar, resulta demasiado tedioso tener que hacerlo uno por uno, por ello se utiliza una clase que se conoce como **Test Runner**, la cual ejecuta todos los tests que contenga, pudiendo ser un único test o múltiples.
+
+Al crear un fichero Test Runner, se crea una estructura por defecto. Si observamos la primera línea del método main, la que contiene un objeto de la clase Result, podemos ver se hace mención a una clase llamada “FirefoxSuite”. Esta clase es una clase Test Suite (que se explicará más adelante) donde están contenidos otros múltiples tests.
+
+También se podrán añadir los test uno por uno separados por comas.
+
+Sin embargo, si tenemos múltiples test, lo más conveniente es realizar un Test Suite donde contenga todas esos múltiples tests y enlazar ese Test Suite en el Test Runner.
+
+###Test Suite
+
+Un **Test Suite** es un archivo donde se especifica un grupo de tests. Para crear un Test Suite son imprescindibles las anotaciones @RunWith y @Suite.SuiteClasses.
+
+Lo único que hay que cambiar en una clase Test Suite son las dos anotaciones que se ven en la definición de la clase. La anotación @Suite.SuiteClasses({...}) es donde incluimos todos los JUnit Test que tengamos. 
+
+**Toda la información sobre JUnit se puede obtener y ampliar de los siguientes enlaces:**
+
+**[Enlace 1](http://www.vogella.com/tutorials/JUnit/article.html#unittesting)**
+
+**[Enlace 2](http://www.toolsqa.com/java/junit-framework/junit-introduction/)**
+
+**En estos enlaces podremos encontrar mayor información sobre JUnit y numerosos ejemplos.**
 
 
 
